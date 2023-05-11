@@ -3,6 +3,8 @@
 APP_NAME='APP_NAME'
 UPDATER_VERSION='1.0.0' 
 
+VERBOSE_MODE=true
+
 function do_update_procedure
 {
   # TODO: implement do_update_procedure
@@ -47,6 +49,21 @@ function is_update_available
   fi
 }
 
+function verbose_mode
+{
+  if test $VERBOSE_MODE = "true"
+  then return 0
+  else return 1
+  fi
+}
+
+function verbose_echo
+{
+  if verbose_mode
+  then echo "$@"
+  fi
+}
+
 function process_parameters
 {
   while test $# -gt 0
@@ -60,6 +77,10 @@ function process_parameters
       use )
         LATEST_VERSION="$2"
         shift 2
+      ;;
+      --quiet | --silent )
+        VERBOSE_MODE=false
+        shift
       ;;
       * )
         echo "$1 can not be processed, exiting script"
@@ -80,8 +101,8 @@ function main
     echo "Doing update from $LOCAL_VERSION to $LATEST_VERSION"
     do_update_procedure
   else
-    echo "Your $APP_NAME is already up to date."
-    echo "You are running $APP_NAME $LOCAL_VERSION"
+    verbose_echo "Your $APP_NAME is already up to date."
+    verbose_echo "You are running $APP_NAME $LOCAL_VERSION"
   fi
 }
 
