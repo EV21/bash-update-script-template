@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-APP_NAME='APP_NAME'
-UPDATER_VERSION='1.0.0' 
+APP_NAME='APP_NAME' # change this!
+UPDATER_VERSION='1.0.0' # change this!
+LATEST_UPDATER_URL='https://github.com/EV21/bash-update-script-template/raw/main/update.sh' # chenge this!
+LATEST_UPDATER_VERSION=$(bash -c "$(wget -q -O - $LATEST_UPDATER_URL)" _ version)
 
 VERBOSE_MODE=true
 INTERACTION_MODE=true
@@ -29,6 +31,14 @@ function set_latest_version
   # TODO: implement set_latest_version
   # For example you call the GitHub `latest` release API endpoint
   LATEST_VERSION=0.0.2
+}
+
+function is_updater_update_available
+{
+  if is_version_lower_than $UPDATER_VERSION "$LATEST_UPDATER_VERSION"
+  then return 0
+  else return 1
+  fi
 }
 
 function ask_yes_no_question
@@ -151,6 +161,10 @@ function process_parameters
 function main
 {
   process_parameters "$@"
+  if is_updater_update_available
+  then echo "$APP_NAME Updater $LATEST_UPDATER_VERSION is available, please update this script"
+  else verbose_echo "$APP_NAME Updater $LATEST_UPDATER_VERSION"
+  fi
   set_local_version
   set_latest_version
   if is_update_available
