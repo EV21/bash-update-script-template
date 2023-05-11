@@ -28,7 +28,7 @@ function set_latest_version
   LATEST_VERSION=0.0.2
 }
 
-# version_lower_than A B
+# is_version_lower_than A B
 # returns whether A < B
 function is_version_lower_than
 {
