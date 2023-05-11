@@ -4,6 +4,7 @@ APP_NAME='APP_NAME'
 UPDATER_VERSION='1.0.0' 
 
 VERBOSE_MODE=true
+INTERACTION_MODE=true
 
 function do_update_procedure
 {
@@ -30,6 +31,24 @@ function set_latest_version
   LATEST_VERSION=0.0.2
 }
 
+function ask_yes_no_question
+{
+  local question=$1
+  while true
+  do
+  read -r -p "$question (y/n) " ANSWER
+  case $ANSWER in
+    [Yy]* | [Jj]* )
+      return 0
+      ;;
+    [Nn]* )
+      return 1
+      ;;
+    * ) echo "Please answer yes or no. ";;
+  esac
+  done
+}
+
 # is_version_lower_than A B
 # returns whether A < B
 function is_version_lower_than
@@ -44,6 +63,14 @@ function is_version_lower_than
 function is_update_available
 {
   if is_version_lower_than "$LOCAL_VERSION" "$LATEST_VERSION"
+  then return 0
+  else return 1
+  fi
+}
+
+function interaction_mode
+{
+  if test $INTERACTION_MODE = "true"
   then return 0
   else return 1
   fi
@@ -82,6 +109,10 @@ function process_parameters
         VERBOSE_MODE=false
         shift
       ;;
+      --no-interaction )
+        INTERACTION_MODE=false
+        shift
+      ;;
       * )
         echo "$1 can not be processed, exiting script"
         exit 1
@@ -97,9 +128,12 @@ function main
   set_latest_version
   if is_update_available
   then
-    echo "There is a new version of available for $APP_NAME."
-    echo "Doing update from $LOCAL_VERSION to $LATEST_VERSION"
-    do_update_procedure
+    echo "There is a new version available for $APP_NAME."
+    echo "Do update from $LOCAL_VERSION to $LATEST_VERSION"
+    if ! interaction_mode || ask_yes_no_question "Do you want to do this update?"
+    then
+      do_update_procedure
+    fi
   else
     verbose_echo "Your $APP_NAME is already up to date."
     verbose_echo "You are running $APP_NAME $LOCAL_VERSION"
