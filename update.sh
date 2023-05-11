@@ -91,13 +91,36 @@ function verbose_echo
   fi
 }
 
+function show_help_message
+{
+  cat << end_of_content
+$APP_NAME Updater $UPDATER_VERSION
+
+Usage:
+$0 [--no-interaction] [--silent | --quiet] [--cron] [use <version-argument>] | [help | version]
+$0 help                     shows this help message and exits
+$0 version                  shows the update scripts version and exits
+$0 use <version-argument>   manually set the version you like to update to - example: $0 use 1.0.42
+
+Options:
+  --no-interaction         the script will not ask you anything, it will just do its work (interaction mode is on by default)
+  --silent                 the output is more silent and shuts up if there is no update (silet mode is off by default)
+  --cron                   this is just a shortcut that sets no-interaction and silent mode
+
+end_of_content
+}
+
 function process_parameters
 {
   while test $# -gt 0
 	do
     local next_parameter=$1
     case $next_parameter in
-      version )
+      help | --help )
+        show_help_message
+        exit 0
+      ;;
+      version | --version )
         echo $UPDATER_VERSION
         exit 0
       ;;
@@ -112,6 +135,10 @@ function process_parameters
       --no-interaction )
         INTERACTION_MODE=false
         shift
+      ;;
+      --cron )
+        VERBOSE_MODE=false
+        INTERACTION_MODE=false
       ;;
       * )
         echo "$1 can not be processed, exiting script"
