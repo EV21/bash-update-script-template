@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 APP_NAME='APP_NAME' # change this!
-UPDATER_VERSION='0.1.0' # change this!
+UPDATER_VERSION='0.1.1' # change this!
 
 VERBOSE_MODE=true
 INTERACTION_MODE=true
+TMP_LOCATION=$HOME/tmp
 
 function do_update_procedure
 {
@@ -170,7 +171,7 @@ function main
   process_parameters "$@"
   set_latest_updater_version
   if is_updater_update_available
-  then echo "$APP_NAME Updater $LATEST_UPDATER_VERSION is available, please update this script"
+  then echo "$APP_NAME Updater $LATEST_UPDATER_VERSION is available, please update this script!"
   else verbose_echo "$APP_NAME Updater $LATEST_UPDATER_VERSION"
   fi
   set_local_version
