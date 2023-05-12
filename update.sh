@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 APP_NAME='APP_NAME' # change this!
-UPDATER_VERSION='0.1.1' # change this!
+UPDATER_VERSION='0.1.2-beta9' # change this!
 
 VERBOSE_MODE=true
 INTERACTION_MODE=true
@@ -115,7 +115,7 @@ function show_help_message
 $APP_NAME Updater $UPDATER_VERSION
 
 Usage:
-$0 [--no-interaction] [--silent | --quiet] [--cron] [use <version-argument>] | [help | version]
+$0 [ [--no-interaction] [--silent | --quiet] [--cron] [use <version-argument>] ] | [help | version]
 $0 help                     shows this help message and exits
 $0 version                  shows the update scripts version and exits
 $0 use <version-argument>   manually set the version you like to update to - example: $0 use 1.0.42

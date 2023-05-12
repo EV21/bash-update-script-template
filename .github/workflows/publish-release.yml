@@ -1,0 +1,20 @@
+# .github/workflows/publish-release.yml
+name: Publish release
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Create GitHub release
+        uses: Roang-zero1/github-create-release-action@v3
+        with:
+          version_regex: ^((0|[1-9]\d*)\.){2}(0|[1-9]\d*)
+          prerelease_regex: ^((0|[1-9]\d*)\.){2}(0|[1-9]\d*)(-(alpha|beta|rc))
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
